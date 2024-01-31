@@ -30,12 +30,9 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
           .map((crypto) => Cryptocurrency.fromJson(crypto))
           .toList();
 
-      // Update state only if data has changed
-      if (!listEquals(newCryptos, cryptos)) {
-        setState(() {
-          cryptos = newCryptos;
-        });
-      }
+      setState(() {
+        cryptos = newCryptos;
+      });
     } catch (e) {
       // Handle error (e.g., show a snackbar)
     }
