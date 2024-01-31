@@ -30,6 +30,11 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
           .map((crypto) => Cryptocurrency.fromJson(crypto))
           .toList();
 
+      // Load the liked status for each cryptocurrency
+      for (var crypto in newCryptos) {
+        await crypto.loadLikedStatus();
+      }
+
       setState(() {
         cryptos = newCryptos;
       });
@@ -78,10 +83,11 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
                     icon: Icon(crypto.isLiked
                         ? Icons.favorite
                         : Icons.favorite_border),
-                    onPressed: () {
+                    onPressed: () async {
                       setState(() {
                         crypto.isLiked = !crypto.isLiked;
                       });
+                      await crypto.saveLikedStatus();
                     },
                   ),
                   onTap: () {

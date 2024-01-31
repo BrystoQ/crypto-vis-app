@@ -1,5 +1,6 @@
 import '../models/cryptocurrency.dart';
 import 'package:flutter/material.dart';
+import 'crypto_detail_screen.dart'; // Make sure to import your detail screen
 
 class LikedCryptoScreen extends StatelessWidget {
   final List<Cryptocurrency> likedCryptos;
@@ -17,6 +18,15 @@ class LikedCryptoScreen extends StatelessWidget {
           return ListTile(
             title: Text(crypto.name),
             subtitle: Text('\$${crypto.priceUsd.toStringAsFixed(2)}'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      CryptoDetailScreen(cryptocurrency: crypto),
+                ),
+              );
+            },
           );
         },
       ),
