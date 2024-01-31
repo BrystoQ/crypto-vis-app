@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Cryptocurrency {
   final String id;
   final String name;
@@ -5,6 +7,7 @@ class Cryptocurrency {
   final double marketCapUsd;
   final String symbol;
   final String rank;
+  bool isLiked;
 
   Cryptocurrency({
     required this.id,
@@ -13,6 +16,7 @@ class Cryptocurrency {
     required this.marketCapUsd,
     required this.symbol,
     required this.rank,
+    this.isLiked = false,
   });
 
   factory Cryptocurrency.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,17 @@ class Cryptocurrency {
       marketCapUsd: double.parse(json['marketCapUsd']),
       symbol: json['symbol'],
       rank: json['rank'],
+      isLiked: json['isLiked'] ?? false,
     );
+  }
+
+  Future<void> saveLikedStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(id, isLiked);
+  }
+
+  Future<void> loadLikedStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    isLiked = prefs.getBool(id) ?? false;
   }
 }

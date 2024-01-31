@@ -3,7 +3,7 @@ import 'dart:async';
 import '../../services/crypto_api_service.dart';
 import '../models/cryptocurrency.dart';
 import 'crypto_detail_screen.dart';
-import 'package:flutter/foundation.dart';
+import 'liked_crypto_screen.dart';
 
 class CryptoListScreen extends StatefulWidget {
   @override
@@ -46,8 +46,26 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var likedCryptos = cryptos.where((crypto) => crypto.isLiked).toList();
+
     return Scaffold(
-      appBar: AppBar(title: Text('Cryptocurrencies')),
+      appBar: AppBar(
+        title: Text('Cryptocurrencies'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.favorite),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      LikedCryptoScreen(likedCryptos: likedCryptos),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: cryptos.isNotEmpty
           ? ListView.builder(
               itemCount: cryptos.length,
@@ -56,6 +74,16 @@ class _CryptoListScreenState extends State<CryptoListScreen> {
                 return ListTile(
                   title: Text(crypto.name),
                   subtitle: Text('\$${crypto.priceUsd.toStringAsFixed(2)}'),
+                  trailing: IconButton(
+                    icon: Icon(crypto.isLiked
+                        ? Icons.favorite
+                        : Icons.favorite_border),
+                    onPressed: () {
+                      setState(() {
+                        crypto.isLiked = !crypto.isLiked;
+                      });
+                    },
+                  ),
                   onTap: () {
                     Navigator.push(
                       context,
